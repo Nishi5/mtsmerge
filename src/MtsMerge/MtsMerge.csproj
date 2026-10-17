@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
     <RootNamespace>MtsMerge</RootNamespace>
     <AssemblyName>MtsMerge</AssemblyName>
     <Version>1.0.0</Version>
@@ -17,6 +18,10 @@
     <NeutralLanguage>ja-JP</NeutralLanguage>
     <SatelliteResourceLanguages>ja</SatelliteResourceLanguages>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="app.ico" LogicalName="MtsMerge.app.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="MtsMerge.Tests" />

@@ -34,7 +34,7 @@ internal sealed class MainForm : Form
         AutoScaleMode = AutoScaleMode.Dpi;
         Font = SystemFonts.MessageBoxFont ?? Font;
         Text = "MTS Merge";
-        Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+        Icon = LoadAppIcon();
         StartPosition = FormStartPosition.CenterScreen;
         ClientSize = new Size(900, 660);
         MinimumSize = new Size(760, 620);
@@ -182,6 +182,13 @@ internal sealed class MainForm : Form
     // ================================================================
     // UI 部品
     // ================================================================
+
+    private static Icon? LoadAppIcon()
+    {
+        // 全サイズ入りのアイコンを使うことで、高 DPI のタイトルバー・タスクバーでも鮮明に表示する
+        using var stream = typeof(MainForm).Assembly.GetManifestResourceStream("MtsMerge.app.ico");
+        return stream is null ? null : new Icon(stream);
+    }
 
     private static Button MakeButton(string text, EventHandler onClick)
     {

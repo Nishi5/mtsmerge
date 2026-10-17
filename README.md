@@ -55,6 +55,12 @@ dotnet publish src/MtsMerge/MtsMerge.csproj -c Release -r win-x64 --self-contain
   -o artifacts/win-x64
 ```
 
+アイコンを変更する場合は `assets/icon.png`（正方形推奨）を差し替えて、次のコマンドで `app.ico` を再生成します。
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/make-icon.ps1 assets/icon.png src/MtsMerge/app.ico
+```
+
 ## ライセンス
 
 [MIT License](LICENSE)
