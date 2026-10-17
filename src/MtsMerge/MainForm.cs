@@ -10,6 +10,7 @@ internal sealed class MainForm : Form
     private static readonly string[] AllowedExtensions = [".mts", ".m2ts", ".ts", ".m2t"];
 
     private readonly List<InputFile> _files = [];
+    private readonly AppSettings _settings = AppSettings.Load();
 
     private readonly ListView _list;
     private readonly Button _btnAdd, _btnRemove, _btnClear, _btnTop, _btnUp, _btnDown, _btnBottom, _btnSortName, _btnSortDate;
@@ -143,8 +144,10 @@ internal sealed class MainForm : Form
         outputLayout.SetColumnSpan(_lblFree, 3);
 
         var optionPanel = new FlowLayoutPanel { AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Anchor = AnchorStyles.Left, WrapContents = false };
-        _chkTimestamp = new CheckBox { Text = "出力ファイルの日時を先頭ファイルに合わせる", AutoSize = true, Checked = true };
-        _chkOpenFolder = new CheckBox { Text = "完了後に保存先フォルダを開く", AutoSize = true, Checked = true };
+        _chkTimestamp = new CheckBox { Text = "出力ファイルの日時を先頭ファイルに合わせる", AutoSize = true, Checked = _settings.MatchTimestampToFirstFile };
+        _chkOpenFolder = new CheckBox { Text = "完了後に保存先フォルダを開く", AutoSize = true, Checked = _settings.OpenFolderWhenDone };
+        _chkTimestamp.CheckedChanged += (_, _) => SaveSettings();
+        _chkOpenFolder.CheckedChanged += (_, _) => SaveSettings();
         optionPanel.Controls.AddRange([_chkTimestamp, _chkOpenFolder]);
         outputLayout.Controls.Add(optionPanel, 0, 3);
         outputLayout.SetColumnSpan(optionPanel, 3);
@@ -182,6 +185,14 @@ internal sealed class MainForm : Form
     // ================================================================
     // UI 部品
     // ================================================================
+
+    /// <summary>チェックボックスが変わるたびに保存する（異常終了しても設定が残るように）。</summary>
+    private void SaveSettings()
+    {
+        _settings.MatchTimestampToFirstFile = _chkTimestamp.Checked;
+        _settings.OpenFolderWhenDone = _chkOpenFolder.Checked;
+        _settings.Save();
+    }
 
     private static Icon? LoadAppIcon()
     {
