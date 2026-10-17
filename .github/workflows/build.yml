@@ -1,0 +1,49 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Test
+        run: dotnet test MtsMerge.sln -c Release
+
+      - name: Publish
+        shell: pwsh
+        run: |
+          $version = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME.TrimStart('v') } else { '0.0.0-dev' }
+          foreach ($rid in 'win-x64', 'win-arm64') {
+            dotnet publish src/MtsMerge/MtsMerge.csproj -c Release -r $rid --self-contained `
+              -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
+              -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:Version=$version `
+              -o "out/$rid"
+            Copy-Item LICENSE, THIRD-PARTY-NOTICES.md, README.md "out/$rid/"
+            Compress-Archive -Path "out/$rid/*" -DestinationPath "MtsMerge-$version-$rid.zip"
+          }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MtsMerge
+          path: MtsMerge-*.zip
+
+      - name: Create release (draft)
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: gh release create "${{ github.ref_name }}" (Get-ChildItem MtsMerge-*.zip).FullName --draft --title "MTS Merge ${{ github.ref_name }}" --generate-notes
