@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace>MtsMerge</RootNamespace>
+    <AssemblyName>MtsMerge</AssemblyName>
+    <Version>1.0.0</Version>
+    <Product>MTS Merge</Product>
+    <Description>MTS (AVCHD / MPEG-TS) ファイル無劣化結合ツール</Description>
+    <Copyright>Copyright (c) 2026 Nishi5</Copyright>
+    <NeutralLanguage>ja-JP</NeutralLanguage>
+    <SatelliteResourceLanguages>ja</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="MtsMerge.Tests" />
+  </ItemGroup>
+
+</Project>
